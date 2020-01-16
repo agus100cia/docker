@@ -137,5 +137,22 @@ docker run \
 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.5.1 
 `````  
 
+1.13.- Ejecutar docker en Background
+
+-d=true  o tambien solo -d
+
+````shell
+
+docker run \
+-d \
+-p 9200:9200 \
+-p 9300:9300 \
+-v /Users/agus/Documentos/docker/elasticsearch/data:/usr/share/elasticsearch/data 	\
+-v /Users/agus/Documentos/docker/elasticsearch/logs:/usr/share/elasticsearch/logs \
+--name myelastic \
+-e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.5.1 
+
+````
+
 
 
