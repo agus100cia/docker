@@ -14,6 +14,17 @@ docker build .
 
 `````
 
+Construir con un nombre (tag)
+
+````shell
+docker tag . <usuario>/<repoName>:<version> --no-cache
+
+Ej: ocker build . --tag amartinez/centos:7 --no-cache
+
+``````
+
+NOTA: El parametro --no-cache es opcional si queremos que cree la imagen desde cero
+
 1.3.- Ver las imagenes
 
 `````shell
@@ -32,6 +43,12 @@ centos              latest              589dc4d40385        42 hours ago        
 
 ````shell
 docker rmi $(docker images -a -q)
+
+`````
+Borrar una imagen de manera forzada (cuando la imagen esta ejecutandose)
+
+````shell
+docker rmi -f $(docker images -a -q)
 
 `````
 
