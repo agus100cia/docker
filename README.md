@@ -95,7 +95,7 @@ docker exec -it <CONTAINER_ID> bash
 EJM:
 docker exec -it 85449527a91e bash
 
-```` 
+`````   
 
 1.9.- Matar a un contenedor
 
@@ -106,4 +106,6 @@ EJM:
 docker kill 85449527a91e
 
 ````
+
+
 
