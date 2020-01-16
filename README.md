@@ -107,5 +107,18 @@ docker kill 85449527a91e
 
 ````
 
+1.10.- Ver todos los Containers
 
+````shell
+docker container ls -a
+```` 
+
+1.11.- Stop and remove all containers
+
+````shell
+docker stop $(docker ps -a -q)
+
+docker rm $(docker ps -a -q)
+
+````
 
