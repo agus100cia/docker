@@ -122,3 +122,20 @@ docker rm $(docker ps -a -q)
 
 ````
 
+1.12.- Mapear puertos y Volumenes
+
+````shell
+docker run -p localport:containerport   -v localfolder:containerfolder --name containerName 
+
+EJM:
+docker run \
+-p 9200:9200 \
+-p 9300:9300 \
+-v /Users/agus/Documentos/docker/elasticsearch/data:/usr/share/elasticsearch/data 	\
+-v /Users/agus/Documentos/docker/elasticsearch/logs:/usr/share/elasticsearch/logs \
+--name myelastic \
+-e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.5.1 
+`````  
+
+
+
