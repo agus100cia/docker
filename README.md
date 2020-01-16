@@ -87,4 +87,12 @@ docker cp 85fd6c595b37:/etc/elasticsearch/elasticsearch.yml .
 
 ``````
 
+1.8.- Iniciar otra terminal en un contenedor
 
+`````shell
+docker exec -it <CONTAINER_ID> bash
+
+EJM:
+docker exec -it 85449527a91e bash
+
+````
