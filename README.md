@@ -17,9 +17,9 @@ docker build .
 Construir con un nombre (tag)
 
 ````shell
-docker tag . <usuario>/<repoName>:<version> --no-cache
+docker tag . <usuario>/<repoName>:<tagName> --no-cache
 
-Ej: ocker build . --tag amartinez/centos:7 --no-cache
+Ej: ocker build . --tag amartinez/centos:centos7inicial --no-cache
 
 ``````
 
@@ -51,5 +51,18 @@ Borrar una imagen de manera forzada (cuando la imagen esta ejecutandose)
 docker rmi -f $(docker images -a -q)
 
 `````
+
+1.5.- Ejecutar 
+
+```shell
+docker run -it 08d05d1d5859   bash
+
+````
+
+Parametros: 
+
+-it = Interactivo, es decir cuando arranque podemos interactuar inmediatamente
+
+bash = Se ejecutara la consola del contenedor
 
 
