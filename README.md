@@ -65,4 +65,26 @@ Parametros:
 
 bash = Se ejecutara la consola del contenedor
 
+1.6.- Cuando la imagen esta ejecutandose se convierte en un CONTENEDOR y tiene su propio ID
+
+Ver los contenedores:
+
+````shell
+docker ps  
+
+EJM: 
+CONTAINER ID        IMAGE               COMMAND             CREATED              STATUS              PORTS               NAMES
+85fd6c595b37        f5833ea08135        "bash"              About a minute ago   Up About a minute                       qu
+`````
+
+1.7.- Copiar un archivo del docker a la maquina real
+
+`````shell
+docker cp <containerId>:/file/path/within/container /host/path/target
+
+EJM:
+docker cp 85fd6c595b37:/etc/elasticsearch/elasticsearch.yml .
+
+``````
+
 
