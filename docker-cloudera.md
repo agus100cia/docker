@@ -1,5 +1,7 @@
 ## Cloudera con dockers
 
+NOTA: Cloudera does not support CDH cluster deployments using hosts in Docker containers.
+
 ## 1.- Descargamos la última imagen de cloudera
 
 ````ssh
@@ -51,5 +53,15 @@ YARN: http://localhost:32769
 ```ssh
 docker inspect [CONTAINER ID]
 ````
+
+## Cloudera Manager
+
+Por defecto no viene levantado Cloudera Manager, para ello hay que ir a 
+
+````ssh
+/home/cloudera/cloudera-manager
+`````
+
+
 
 
