@@ -46,3 +46,10 @@ HUE: http://localhost:32768  (usuario: cloudera: clave: cloudera)
 
 YARN: http://localhost:32769
 
+## Ver el estado del docker
+
+```ssh
+docker inspect [CONTAINER ID]
+````
+
+
