@@ -42,7 +42,7 @@ Parámetros:
 
 ## HUE y YARN
 
-HUE: http://localhost:32768
+HUE: http://localhost:32768  (usuario: cloudera: clave: cloudera)
 
 YARN: http://localhost:32769
 
