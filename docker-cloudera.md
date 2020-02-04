@@ -39,3 +39,10 @@ Parámetros:
 
 --publish-all: Abre todos los puertos de las aplicaciones tales como HUE 8888, YARN, etc.
 
+
+## HUE y YARN
+
+HUE: http://localhost:32768
+
+YARN: http://localhost:32769
+
