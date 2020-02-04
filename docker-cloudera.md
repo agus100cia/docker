@@ -44,6 +44,8 @@ Parámetros:
 
 ## HUE y YARN
 
+NOTA: Estos puertos son aleatorios, por eso es bueno inspeccionar el estado de la red con el comando docker inspect
+
 HUE: http://localhost:32768  (usuario: cloudera: clave: cloudera)
 
 YARN: http://localhost:32769
