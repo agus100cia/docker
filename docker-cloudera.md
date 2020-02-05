@@ -64,6 +64,18 @@ Por defecto no viene levantado Cloudera Manager, para ello hay que ir a
 /home/cloudera/cloudera-manager
 `````
 
+Cuando se levante Cloudera Manager debe instalarse NTP para sincronizar las horas y eliminar las alertas de cloudera manager
 
+````shh
+yum install ntp
+service ntp start
+````` 
+
+Una vez hecho esto puede grabar los cambios en una nueva imagen. Este comando se lo ejecuta fuera del docker
+
+````ssh
+
+sudo docker commit [CONTAINER-ID] nueva-imagen
+`````
 
 
