@@ -188,6 +188,7 @@ kubectl describe service qliksense-nginx-ingress-controller
 ````ssh
 kubectl delete --all pods
 helm del --purge qliksense;
+kubectl delete all --all
 
 ```` 
 
