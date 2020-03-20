@@ -6,8 +6,8 @@
 * Google Cloud utilizando Motor de Google Kubernetes (GKE)
 * Kubernetes clúster mayor que v1.10.xy menor que v1.16.x
 * Processors (CPUs)	Minimum 4 cores
-* Memory	Minimum 8 GB
-* Disk space	5 GB total required to install
+* Memoria minima: 16Gb
+* Espacio en disco 100Gb
 
 ## Instalación:
 
