@@ -44,6 +44,145 @@ helm repo update
 echo "verify helm"
 # verify that helm is installed in the cluster
 kubectl get deploy,svc tiller-deploy -n kube-system
-````
+
+``````
+
+Para comprobar que helm se ha instalado correctamente se debe ejecutar
+
+`````ssh
+helm ls
+`````
+
+Y no debe dar ningun resultado.
+
+## Prepara las herramientas.
+
+Una vez que hemos creado nuestro cluster de Kubernets y además hemos instalado Helm. Debemos:
+
+* Vincular kubectl con Kubernets
+* Añadir el repositorio de Qlik helm chart
+* Iniciar helm para que trabaje sobre Kubernets
+
+### Vincular kubectl con Kubernets
+
+1.- Verifica que kubectl esta apuntando a kubernets usando el comando
+
+````ssh
+kubectl config current-context
+
+`````
+
+2.- Si kubectl no esta apuntando al clúster, obten el listado de todos los clúster disponibles
+
+`````ssh
+kubectl config get-clusters
+
+`````` 
+
+3.- Selecciona el clúser con el que vas a trabajar
+
+`````ssh
+kubectl config set-cluster <cluster-name>
+`````   
+### Agregar el repositorio Qlik de helm chart
+
+1.- Agregar el repositorio
+
+`````ssh
+helm repo add qlik https://qlik.bintray.com/stable
+
+`````  
+
+2.- Para verificar obten en listado de todos los repositorios configurados
+
+``````ssh
+helm repo list
+
+``````   
+
+Para poder usar Helm con tu clúster de Kubernets es necesario:
+
+Añadir Helm Tiller pod al clúster:
+
+````ssh
+helm init --wait
+
+````` 
+
+Si tu clúster tiene una seguridad del tipo RBAC (no es necesario en Google Cloud), es necesario añadir estos comandos
+
+`````ssh
+kubectl create serviceaccount --namespace kube-system tiller
+kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+
+helm init --upgrade –-wait
+kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
+
+````` 
+
+
+## Instalar Qliksense en Kubernets
+
+Una vez que hemos instalado y configurado kubectl, helm y sus repositorios, estamos listos para instalar Qliksense.
+
+Para instalar un ambiente productivo es importante instalar un IDP (autenticación de usuarios) y una base de datos MongoDB.
+
+Es conveniente disponer de un archivo value.yaml, para poder instalar y configurar los parámetros necesarios.
+
+
+### 1.-Crea un archivo llamado values.yaml
+
+`````yaml
+#Estos parametros de configuracion habilita el modo developer el cual incluye una base local de MongoDB
+devMode:
+  enabled: true
+
+#Este parámetro acepta el EULA (End-User License Agreement) para el producto
+engine:
+  acceptEULA: "yes"
+  
+#Este parámetro especifica los servicios de almacenamiento
+global:
+  persistence:
+    storageClass: my-storage-class
+
+``````
+
+Qliksense creará motores para las recargas programadas. Para poder hacer esto el Engine debe configurarse en Kubernets como un recurso personalizado.
+Este paso se debe realizar una vez por clúster.
+
+`````ssh
+helm install --name qliksense-init qlik/qliksense-init
+
+`````  
+
+Ahora vamos a instalar Qliksense, esto incluye descargase las imágenes.
+
+````ssh
+helm install -n qliksense qlik/qliksense -f values.yaml
+
+````` 
+
+Para verificar el progreso del comando usamos:
+
+``````ssh
+kubectl get pods
+
+``````  
+Si la implementación fue exitosa, se verán a todos los pods en modo Running.
+
+## Accediendo a Qliksense
+
+Debemos obtener la IP donde esta ejecutándose el servicio. Para ello ejecutamos
+
+`````ssh
+kubectl describe service qliksense-nginx-ingress-controller
+
+`````
+
+
+
+
+
 
 
