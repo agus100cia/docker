@@ -16,6 +16,8 @@
 ````ssh
 gcloud container clusters create qseok-gke --machine-type "n1-standard-2" --num-nodes 2 --zone us-central1-c
 
+gcloud container clusters get-credentials qseok-gke --zone us-central1-c
+
 ````` 
 
 Crear un archivo rbac-config.yaml
