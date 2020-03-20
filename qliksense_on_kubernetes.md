@@ -11,6 +11,203 @@
 
 ![img](https://github.com/agus100cia/docker/blob/master/qliksense-kubernets-gcloud.png)
 
+## Crear un cluster:
+
+````ssh
+gcloud container clusters create qseok-gke --machine-type "n1-standard-2" --num-nodes 2 --zone us-central1-c
+
+````` 
+
+Crear un archivo rbac-config.yaml
+
+`````yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: tiller
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: tiller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: tiller
+    namespace: kube-system
+
+``````   
+
+````ssh
+kubectl apply -f rbac-config.yaml
+helm init --service-account tiller
+
+````` 
+
+Archivo gke-nfs-values.yaml
+
+`````yaml 
+# Default values for nfs-provisioner.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+# imagePullSecrets:
+
+image:
+  repository: quay.io/kubernetes_incubator/nfs-provisioner
+  tag: v2.2.1-k8s1.12
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+
+  nfsPort: 2049
+  mountdPort: 20048
+  rpcbindPort: 51413
+  # nfsNodePort:
+  # mountdNodePort:
+  # rpcbindNodePort:
+
+  externalIPs: []
+
+persistence:
+  enabled: true
+
+  ## Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  storageClass: "standard"
+
+  accessMode: ReadWriteOnce
+  size: 100Gi
+
+## For creating the StorageClass automatically:
+storageClass:
+  create: true
+
+  ## Set a provisioner name. If unset, a name will be generated.
+  # provisionerName:
+
+  ## Set StorageClass as the default StorageClass
+  ## Ignored if storageClass.create is false
+  defaultClass: false
+
+  ## Set a StorageClass name
+  ## Ignored if storageClass.create is false
+  name: nfs-dynamic
+
+  # set to null to prevent expansion
+  allowVolumeExpansion: true
+  ## StorageClass parameters
+  parameters: {}
+
+  mountOptions:
+    - vers=4.1
+    - noatime
+
+  ## ReclaimPolicy field of the class, which can be either Delete or Retain
+  reclaimPolicy: Delete
+
+## For RBAC support:
+rbac:
+  create: true
+
+  ## Ignored if rbac.create is true
+  ##
+  serviceAccountName: default
+
+resources: {}
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+`````` 
+
+````ssh
+helm install -n nfs stable/nfs-server-provisioner -f gke-nfs-values.yaml
+
+`````  
+Archivo nfs-vol-pvc.yaml
+
+`````yaml 
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: qseok-vol
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: "nfs-dynamic"
+  resources:
+    requests:
+      storage: 5Gi
+      
+``````  
+
+`````ssh
+kubectl apply -f nfs-vol-pvc.yaml
+helm repo add qlik https://qlik.bintray.com/stable
+helm install -n qseok-init qlik/qliksense-init
+
+````` 
+
+
+Archivo qseok-values.yaml
+
+``````yaml 
+devMode:
+  enabled: true
+engine:
+  acceptEULA: "yes"
+global:
+  persistence:
+    storageClass: "nfs-dynamic"
+    
+identity-providers:
+  secrets:
+    idpConfigs:
+      - discoveryUrl: "https://dev-test.eu.auth0.com/.well-known/openid-configuration"
+        clientId: "masked"
+        clientSecret : "masked"
+        realm: "Auth0"
+        hostname: "elastic.example"
+        claimsMapping:
+          client_id: [ "client_id", "azp" ]
+          groups: "/https://~1~1qlik.com~1groups"
+          sub: ["/https:~1~1qlik.com~1sub", "sub"]
+          
+          
+``````   
+
+`````ssh
+helm install -n qseok qlik/qliksense -f qseok-values.yaml
+kubectl get svc -w
+
+``````  
+
+https://support.qlik.com/articles/000082465
+
+
+
 ## Instalación:
 
 Qliksense enterprise sobre Kubernets es un conjunto de imágenes concentradas en un paquete de Helm Chart (Herramienta para la administración de Kubernets).
