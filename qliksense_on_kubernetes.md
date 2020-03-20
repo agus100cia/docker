@@ -144,9 +144,10 @@ engine:
   acceptEULA: "yes"
   
 #Este parámetro especifica los servicios de almacenamiento
+#El parametros StorageClass debe ser tomado del cluster en el caso de google es standard
 global:
   persistence:
-    storageClass: my-storage-class
+    storageClass: standard  
 
 ``````
 
