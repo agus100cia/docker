@@ -9,6 +9,8 @@
 * Memoria minima: 16Gb
 * Espacio en disco 100Gb
 
+![img](https://github.com/agus100cia/docker/blob/master/qliksense-kubernets-gcloud.png)
+
 ## Instalación:
 
 Qliksense enterprise sobre Kubernets es un conjunto de imágenes concentradas en un paquete de Helm Chart (Herramienta para la administración de Kubernets).
