@@ -183,7 +183,12 @@ kubectl describe service qliksense-nginx-ingress-controller
 
 `````
 
+## Borrar todos los pods
 
+````ssh
+kubectl delete --all pods
+
+```` 
 
 
 
