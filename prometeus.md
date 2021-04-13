@@ -162,6 +162,13 @@ docker container ls -a
 
 ```
 
+```sh
+[naadbd01@quisrvbigdata9 prometheus]$ docker container ls -a
+CONTAINER ID        IMAGE                   COMMAND                  CREATED             STATUS                      PORTS                                                                                                                                           NAMES
+99434df1735f        prom/prometheus         "/bin/prometheus --c…"   4 seconds ago       Up 3 seconds                        
+```
+
+
 Si su contenedor no se está ejecutando, aquí hay un comando para inspeccionar lo que sucedió durante la inicialización del contenedor.
 
 ```sh
