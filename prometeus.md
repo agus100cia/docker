@@ -136,8 +136,11 @@ prometheus:x:991:977:/home/prometheus:/bin/false
   
  ```sh
  
-docker run -d -p 9005:9005 --user 991:977 \
---net=host \
+docker run \
+--name prometheus \
+-d \
+-p 9005:9090 \
+--user 991:977 \
 -v /home/naadbd01/docker/prometheus/conf/prometheus.yml:/etc/prometheus/prometheus.yml \
 -v /home/naadbd01/docker/prometheus/data:/data/prometheus \
 prom/prometheus \
@@ -153,7 +156,7 @@ prom/prometheus \
 - -v : significa volumen . Esto está relacionado con el " mapeo de volumen ", que consiste en mapear directorios o archivos en su sistema local a directorios en el contenedor.
 - –Config.file : el archivo de configuración que utilizará el contenedor Prometheus Docker.
 - –Storage.tsdb.path : la ubicación donde Prometheus va a almacenar los datos (es decir, la serie temporal almacenada).
-- –Net : queremos que el contenedor Prometheus Docker se comparta en la misma red que el host. De esta forma, podemos configurar exportadores en contenedores individuales y exponerlos al contenedor Prometheus Docker.
+
 
 Para asegurarse de que todo funcione correctamente, enumere los contenedores en ejecución en su instancia.
 
