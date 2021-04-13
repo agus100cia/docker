@@ -33,6 +33,11 @@ Para ver las imagenes que tenemos:
 
 ```sh
 docker image ls
+
+[naadbd01@quisrvbigdata9 conf]$ docker image ls
+REPOSITORY                  TAG                 IMAGE ID            CREATED             SIZE
+prom/prometheus             latest              6d6859d1a42a        13 days ago         169MB
+
 ```
 
 Importar la imagen
