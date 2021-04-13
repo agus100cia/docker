@@ -80,7 +80,7 @@ sudo netstat -tulpn | grep 9005
  Vamos a necesitar conocer el ID del usuario prometeus, Esto es lo que usaremos para crear nuestro contenedor Prometheus.
  
  ```sh
-id prometeus
+id prometheus
 ```
 
 o tambien
