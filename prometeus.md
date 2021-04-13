@@ -29,6 +29,19 @@ Los archivos de configuración y los directorios de datos se almacenarán en el 
 
 Como consecuencia, esas carpetas se asignarán al contenedor de Docker para garantizar la persistencia de los datos. También es más fácil modificar archivos en el sistema de archivos local que en un contenedor.
 
+Para ver las imagenes que tenemos:
+
+```sh
+docker image ls
+```
+
+Importar la imagen
+
+```sh
+docker pull prom/prometheus
+```
+
+
 ### Preparar el ambiente
 
 Cree un usuario para Prometheus en su sistema si aún no existe.
@@ -87,7 +100,7 @@ o tambien
 
  ```sh
 cat /etc/passwd | grep prometheus
-prometheus:x:996:996:/home/prometheus:/bin/false
+prometheus:x:991:977:/home/prometheus:/bin/false
 
   ```
   
@@ -95,7 +108,7 @@ prometheus:x:996:996:/home/prometheus:/bin/false
   
  ```sh
  
-docker run -d -p 9005:9005 --user 996:996 \ 
+docker run -d -p 9005:9005 --user 991:977 \ 
 --net=host \
 -v /home/naadbd01/docker/prometheus/conf/prometheus.yml \ 
 -v /home/naadbd01/docker/prometheus/data \ 
