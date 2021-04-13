@@ -71,12 +71,35 @@ sudo nano /home/naadbd01/docker/prometheus/conf/prometheus.yml
 Pegue esta configuracion
 
 ```sh
+# my global config
+global:
+  scrape_interval:     15s # Escanea cada 15 segudos. Default is every 1 minute.
+  evaluation_interval: 15s # Evalua las reglas cada 15 segundos. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      # - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
 scrape_configs:
-  # Escanea el propio(localhost) prometeus cada 10 segundos.
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
   - job_name: 'prometheus'
-    scrape_interval: 10s
-    target_groups:
-      - targets: ['localhost:9005']
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+    - targets: ['localhost:9005']
 
 ```
 
@@ -113,13 +136,13 @@ prometheus:x:991:977:/home/prometheus:/bin/false
   
  ```sh
  
-docker run -d -p 9005:9005 --user 991:977 \ 
+docker run -d -p 9005:9005 --user 991:977 \
 --net=host \
--v /home/naadbd01/docker/prometheus/conf/prometheus.yml \ 
--v /home/naadbd01/docker/prometheus/data \ 
-prom/prometheus \ 
---config.file="/home/naadbd01/docker/prometheus/conf/prometheus.yml" \ 
---storage.tsdb.path="/home/naadbd01/docker/prometheus/data"
+-v /home/naadbd01/docker/prometheus/conf/prometheus.yml:/etc/prometheus/prometheus.yml \
+-v /home/naadbd01/docker/prometheus/data:/data/prometheus \
+prom/prometheus \
+--config.file="/etc/prometheus/prometheus.yml" \
+--storage.tsdb.path="/data/prometheus"
 
 ```
   
