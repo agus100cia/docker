@@ -184,4 +184,136 @@ Sin embargo, si su contenedor está activo, debería tener acceso a la interfaz 
 ![img](https://devconnected.com/wp-content/uploads/2019/08/prometheus-web-u.png)
 
 
+Sin embargo, Prometheus solo no es muy útil. Como consecuencia, vamos a instalar el exportador de Node : un exportador responsable de recopilar y agregar métricas relacionadas con el rendimiento del sistema Linux.
 
+## Export node
+
+El exportador de Node también viene con su propia imagen de Docker.
+
+De manera similar a lo que hicimos con la imagen de Prometheus Docker, creemos un usuario para Node Exporter.
+
+```sh
+docker pull prom/node-exporter
+sudo mkdir -p /home/naadbd01/docker/node-exporter
+sudo useradd -rs /bin/false node_exporter
+sudo chown -R node_exporter:node_exporter /home/naadbd01/docker/node-exporter
+cat /etc/passwd | grep node_exporter
+node_exporter:x:990:976::/home/node_exporter:/bin/false
+
+```
+
+Vamos a ejecutar el contenedor
+
+```sh
+docker run \
+--name node-exporter \
+-d \
+-p 9004:9100 \
+--user 990:976 \
+-v "/home/naadbd01/docker/node-exporter:/hostfs" \
+prom/node-exporter \
+--path.rootfs=/hostfs
+```
+
+
+Verifique que node-exporter este funcionando
+
+```sh
+curl http://localhost:9006/metrics
+
+node_scrape_collector_success{collector="arp"} 1
+node_scrape_collector_success{collector="bcache"} 1
+node_scrape_collector_success{collector="bonding"} 1
+node_scrape_collector_success{collector="conntrack"} 1
+node_scrape_collector_success{collector="cpu"} 1
+```
+
+Ahora necesitamos vincular a Prometheus con el exportador de nodos
+
+## Vincular Prometheus con node-exporter
+
+Vamos a modificar el archivo de configuracion de prometheus. La idea es agregar un job_name que apunte a node-exporter
+
+```yml
+# my global config
+global:
+  scrape_interval:     15s # Escanea cada 15 segudos. Default is every 1 minute.
+  evaluation_interval: 15s # Evalua las reglas cada 15 segundos. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+      # - alertmanager:9093
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: 'prometheus'
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+    - targets: ['localhost:9005']
+
+  - job_name: 'node-exporter'
+    scrape_interval: 10s
+    static_configs:
+    - targets: ['localhost:9004']
+
+```
+
+No es necesario reiniciar el contenedor Prometheus Docker para que se apliquen las modificaciones.
+
+Para reiniciar su configuración de Prometheus, simplemente envíe una señal SIGHUP a su proceso de Prometheus.
+
+Primero, identifique el PID de su servidor Prometheus.
+
+```sh
+ps aux | grep prometheus
+
+prometh+ 54459  0.2  0.0 906312 38492 ?        Ssl  18:44   0:04 /bin/prometheus --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/data/prometheu
+naadbd01 55157  0.0  0.0 112652   968 pts/43   S+   19:09   0:00 grep --color=auto prometheus
+
+```
+
+Para el caso el PID es 54459. Envíe una señal SIGHUP a este proceso para que se reinicie la configuración.
+
+```sh
+sudo kill -HUP 54459
+ 
+ ```
+ 
+ Ahora, su instancia de Prometheus debe tener el exportador de nodos como destino. Para verificarlo, diríjase a 
+ 
+ http://localhost:9005 y verifique que sea el caso.
+ 
+ ## Grafana
+ 
+ Ahora necesitamos de un visualizador para graficar las metricas y para eso vamos a utilizar grafana
+ 
+ ```sh
+ docker pull grafana/grafana
+ sudo mkdir -p /home/naadbd01/docker/grafana
+ 
+ ```
+ 
+ Ejecutamos el contenedor
+ 
+```sh
+docker run \
+--name grafana \
+-d \
+-p 9006:3000 \
+grafana/grafana 
+ 
+```
