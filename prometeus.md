@@ -317,3 +317,43 @@ docker run \
 grafana/grafana 
  
 ```
+
+Por defecto el usuario y clave es admin/admin
+
+![img](https://devconnected.com/wp-content/uploads/2019/08/grafana-default.png)
+
+De forma predeterminada, se le redirigirá a la página de inicio. Haga clic en la opción "Agregar una fuente de datos".
+
+![img](https://devconnected.com/wp-content/uploads/2019/08/home.png)
+
+Elija una fuente de datos de Prometheus y haga clic en " Seleccionar "
+
+![img](https://devconnected.com/wp-content/uploads/2019/08/prometheus-datasource-1.png)
+
+Aquí está la configuración para su host Prometheus.
+
+![img](https://devconnected.com/wp-content/uploads/2019/08/datasource-prometheus.png)
+
+![img](https://devconnected.com/wp-content/uploads/2019/08/save-test.png)
+
+Como el exportador de nodo es un exportador bastante popular, hay desarrolladores que ya crearon paneles de control para él.
+
+Como consecuencia, vamos a instalar el panel de Exportador de Nodos en Prometheus.
+
+En el menú de la izquierda, haga clic en el icono "Más", luego en "Importar".
+
+![img](https://devconnected.com/wp-content/uploads/2019/08/import.png)
+
+En el cuadro de texto del panel de Grafana, escriba 1860 y espere a que Grafana recupere la información del panel automáticamente.
+
+![img](https://devconnected.com/wp-content/uploads/2019/08/dashboard-import.png)
+
+En la siguiente ventana, seleccione Prometheus como fuente de datos y haga clic en " Importar ".
+
+![img](https://devconnected.com/wp-content/uploads/2019/08/import-2.png)
+
+¡Eso es! Su panel ahora debería crearse automáticamente.
+
+![img](https://devconnected.com/wp-content/uploads/2019/08/final-dash.png)
+
+
