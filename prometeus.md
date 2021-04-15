@@ -357,3 +357,50 @@ En la siguiente ventana, seleccione Prometheus como fuente de datos y haga clic 
 ![img](https://devconnected.com/wp-content/uploads/2019/08/final-dash.png)
 
 
+
+## Prometheus con nginx
+
+nginx en sí ya viene con un punto final de estado por sí solo, que se puede habilitar usando ngx_http_stub_status_module . Para hacer esto, tenemos que abrir nuestro nginx.conf y agregar una ubicación separada:
+
+```yml
+http {
+    index   index.html;
+    server {
+        location /metrics {
+            stub_status on;
+        }
+    }
+}
+```
+
+Usando esta configuración, tendremos un endpoint /metrics que nos proporcionará alguna información, por ejemplo:
+
+```html
+Active connections: 3 
+server accepts handled requests
+ 3100 3100 191419 
+Reading: 0 Writing: 1 Waiting: 2 
+
+```
+
+### Usando el exportador de prometheus
+
+Si bien ya es genial que tengamos algunas métricas ahora, no están listas para ser consumidas por Prometheus. Para hacer eso, tenemos que crear un punto final legible por Prometheus que proporcione estas métricas.
+
+Una de las herramientas que podemos usar para hacer esto es nginx-prometheus-exporter , que se puede ejecutar usando Docker, por ejemplo:
+
+```ssh
+docker pull nginx/nginx-prometheus-exporter
+
+```
+
+Para ejecutarlo:
+
+```ssh
+docker run \
+--name nginx-prometheus-exporter \
+-d \
+-p 9113:9113 nginx/nginx-prometheus-exporter:0.2.0 \
+-nginx.scrape-uri=http://quisrvbigdata9:8800/metrics
+  
+```
