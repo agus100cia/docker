@@ -376,7 +376,9 @@ http {
 Para ejecutar el cambio en el contenedor sin reiniciarlo puede usar:
 
 ```ssh
-docker exec <nginxcontainername/id> nginx -s reload
+docker exec -it <nginxcontainername/id> nginx -s reload
+
+docker exec -it 845c3090dbd3  nginx -s reload
 ```
 
 Usando esta configuración, tendremos un endpoint /metrics que nos proporcionará alguna información, por ejemplo:
