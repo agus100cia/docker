@@ -373,6 +373,12 @@ http {
 }
 ```
 
+Para ejecutar el cambio en el contenedor sin reiniciarlo puede usar:
+
+```ssh
+docker exec <nginxcontainername/id> nginx -s reload
+```
+
 Usando esta configuración, tendremos un endpoint /metrics que nos proporcionará alguna información, por ejemplo:
 
 ```html
@@ -404,3 +410,5 @@ docker run \
 -nginx.scrape-uri=http://quisrvbigdata9:8800/metrics
   
 ```
+
+
